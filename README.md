@@ -54,17 +54,7 @@ Skrypt działa w nieskończonej pętli: pobiera dane z API, po czym cyklicznie w
 
 ## Autostart po restarcie (crontab)
 
-Żeby `weather.py` uruchamiał się automatycznie po każdym starcie Raspberry Pi, dodaj wpis `@reboot` do crontab.
-
-**Automatycznie:**
-
-```bash
-bash install_cron.sh
-```
-
-Skrypt dopisuje do crontab użytkownika, który go uruchomił, wpis startujący `weather.py` z opóźnieniem 10 sekund (czas na inicjalizację I2C i sieci) i przekierowujący logi do `weather.log` obok skryptu. Można go uruchomić wielokrotnie — poprzedni wpis dla `weather.py` jest za każdym razem zastępowany.
-
-**Ręcznie:**
+Żeby `weather.py` uruchamiał się automatycznie po każdym starcie Raspberry Pi, dodaj wpis `@reboot` do crontab:
 
 ```bash
 crontab -e
@@ -76,7 +66,9 @@ i dopisz linię (podmieniając ścieżkę na tę, w której faktycznie leży pro
 @reboot sleep 10 && /usr/bin/python3 /home/pi/rpi-lcd-weather/weather.py >> /home/pi/rpi-lcd-weather/weather.log 2>&1
 ```
 
-W obu przypadkach upewnij się, że demon `pigpiod`, od którego zależy podświetlenie, też startuje automatycznie:
+`sleep 10` daje czas na inicjalizację I2C i sieci, a przekierowanie zapisuje logi do `weather.log` obok skryptu.
+
+Upewnij się też, że demon `pigpiod`, od którego zależy podświetlenie, startuje automatycznie:
 
 ```bash
 sudo systemctl enable pigpiod
